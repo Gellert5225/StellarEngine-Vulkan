@@ -60,7 +60,10 @@ $(BUILD_DIR)/%.o: %.cpp
 	@$(call run_and_test,$(CC) $(CFLAGS) $(INCLUDES) -c $<  -o $@)
 
 run:
-	export $(LIB_PATH); \
+ifneq ($(OS),windows)
+	export $(LIB_PATH); 
+endif
+	\
 	./bin/Sandbox$(EXE_EXT)
 
 clean:
