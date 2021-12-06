@@ -3,8 +3,8 @@
 
 #include "Core.h"
 
-namespace STLR_API Stellar {
-    class Application {
+namespace Stellar {
+    class STLR_API Application {
     public:
         Application();
         virtual ~Application();

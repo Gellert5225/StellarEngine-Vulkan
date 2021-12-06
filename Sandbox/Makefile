@@ -8,9 +8,13 @@ RM = rm -f
 CC = g++
 CFLAGS = -std=c++17 -Wall -g -O3
 INCLUDES = -I../Stellar/src/
-LFLAGS = -L../Stellar/lib
-LIBS = -lStellar -lglfw -lvulkan -ldl -lpthread -lX11 -lXxf86vm -lXrandr -lXi
+LFLAGS = -L./bin
+LIBS = -lStellar #-lglfw -lvulkan -ldl -lpthread -lX11 -lXxf86vm -lXrandr -lXi
 
+ifeq ($(OS),Windows_NT) # OS is a preexisting environment variable on Windows
+	OS = windows
+	EXE_EXT = .exe
+endif
 # Source files
 SRC_DIR = src
 SRCS := $(sort $(shell find $(SRC_DIR) -name '*.cpp'))
@@ -35,6 +39,9 @@ $(BIN_DIR)/$(MAIN): $(OBJS)
 $(BUILD_DIR)/%.o: %.cpp
 	@mkdir -p '$(@D)'
 	@$(call run_and_test,$(CC) $(CFLAGS) $(INCLUDES) -c $<  -o $@)
+
+run:
+	./bin/Sandbox$(EXE_EXT)
 
 clean:
 	@echo "Cleaning"
