@@ -5,20 +5,35 @@ BIN_DIR := bin
 RM = rm -f
 
 # Compiler and flags
-CC = g++
+CC = export LD_LIBRARY_PATH=:./bin; g++
 CFLAGS = -std=c++17 -Wall -g -O3
 INCLUDES = -I../Stellar/src/
-LFLAGS = -L./bin
-LIBS = -lStellar #-lglfw -lvulkan -ldl -lpthread -lX11 -lXxf86vm -lXrandr -lXi
+LFLAGS = -L./bin -Wl,-rpath,./bin
+LIBS = -lStellar
 
 ifeq ($(OS),Windows_NT) # OS is a preexisting environment variable on Windows
 	OS = windows
 	EXE_EXT = .exe
+else
+	UNAME := $(shell uname -s)
+	ifeq ($(UNAME),Darwin)
+		OS = macos
+	else 
+		ifeq ($(UNAME),Linux)
+			OS = linux
+		else
+			$(error OS not supported by this Makefile)
+		endif
+	endif
 endif
 # Source files
 SRC_DIR = src
 SRCS := $(sort $(shell find $(SRC_DIR) -name '*.cpp'))
 OBJS = $(SRCS:%.cpp=$(BUILD_DIR)/%.o)
+
+ifeq ($(OS),linux)
+	LIBS += -lglfw -lvulkan
+endif
 
 # define the executable file 
 MAIN = Sandbox
