@@ -1,7 +1,8 @@
 LIB_NAME = Stellar
 
+# Commen flags for all platforms
 CXX      = g++
-CPPFLAGS =
+CPPFLAGS = -I ./vendor/glfw/include
 CXXFLAGS = -std=c++17 -g -O3 -DSTLR_BUILD_DLL -fPIC
 LDFLAGS  = 
 LDLIBS   =
@@ -16,6 +17,8 @@ else
 	UNAME := $(shell uname -s)
 	ifeq ($(UNAME),Darwin)
 		OS = macos
+		LIB_EXT = .dylib
+		GLFW_LIB = libglfw.3.dylib
 	else 
 		ifeq ($(UNAME),Linux)
 			OS = linux
@@ -29,7 +32,7 @@ endif
 # OS-specific settings
 ifeq ($(OS),windows)
 	LDFLAGS += -L./vendor/glfw/libs -L"C:\Windows\System32"
-	CPPFLAGS += -I ./vendor/glfw/include -I "C:\VulkanSDK\1.2.198.1\Include"
+	CPPFLAGS += -I "C:\VulkanSDK\1.2.198.1\Include"
 	LDLIBS += -lglfw3 -lopengl32 -lgdi32 -lvulkan-1
 
 	ifeq ($(win32),1)
@@ -37,12 +40,12 @@ ifeq ($(OS),windows)
 	endif
 
 	else ifeq ($(OS),macos)
-		INCLUDES +=
-		LDFLAGS +=
-		LDLIBS +=
+		CPPFLAGS += 
+		LDFLAGS += -L./vendor/glfw/libs
+		LDLIBS += -lglfw.3 -lvulkan
 	else ifeq ($(OS),linux)
-		CPPFLAGS += -I ./vendor/glfw/include 
-		LDFLAGS += L./vendor/glfw/libs
+		CPPFLAGS +=
+		LDFLAGS += -L./vendor/glfw/libs
 		LDLIBS += -lglfw -lvulkan
 endif
 
