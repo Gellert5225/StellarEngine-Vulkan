@@ -3,13 +3,15 @@ LIB_NAME = Stellar
 CXX      = g++
 CPPFLAGS =
 CXXFLAGS = -std=c++17 -g -O3 -DSTLR_BUILD_DLL -fPIC
+LDFLAGS  = 
 LDLIBS   =
 RM       = rm -f
 
 # Target OS detection
 ifeq ($(OS),Windows_NT) # OS is a preexisting environment variable on Windows
 	OS = windows
-	LIB_EXT = .dll 
+	LIB_EXT = .dll
+	GLFW_LIB = glfw3.dll
 else
 	UNAME := $(shell uname -s)
 	ifeq ($(UNAME),Darwin)
@@ -17,6 +19,8 @@ else
 	else 
 		ifeq ($(UNAME),Linux)
 			OS = linux
+			LIB_EXT = .so
+			GLFW_LIB = libglfw.so.3.3
 		else
 			$(error OS not supported by this Makefile)
 		endif
@@ -24,7 +28,7 @@ else
 endif
 # OS-specific settings
 ifeq ($(OS),windows)
-	LDFLAGS += -L./vendor/glfw/lib -L"C:\Windows\System32"
+	LDFLAGS += -L./vendor/glfw/libs -L"C:\Windows\System32"
 	CPPFLAGS += -I ./vendor/glfw/include -I "C:\VulkanSDK\1.2.198.1\Include"
 	LDLIBS += -lglfw3 -lopengl32 -lgdi32 -lvulkan-1
 
@@ -32,15 +36,14 @@ ifeq ($(OS),windows)
 	$(error Stellar Engine does not support 32 bit os)
 	endif
 
-	ifeq ($(OS),macos)
+	else ifeq ($(OS),macos)
 		INCLUDES +=
 		LDFLAGS +=
 		LDLIBS +=
 	else ifeq ($(OS),linux)
-		INCLUDES +=
-		LDFLAGS +=
-		LDLIBS +=
-endif
+		CPPFLAGS += -I ./vendor/glfw/include 
+		LDFLAGS += L./vendor/glfw/libs
+		LDLIBS += -lglfw -lvulkan
 endif
 
 # EVERYTHING PAST HERE SHOULD WORK AUTOMATICALLY
@@ -58,8 +61,8 @@ O_FILES = $(patsubst %.cpp,build/%.o,$(SRC_FILES))
 
 all: $(EXECUTABLES) lib/lib$(LIB_NAME)$(LIB_EXT)
 	@mkdir -p ../Sandbox/bin
-	@cp ./lib/libStellar.dll ../Sandbox/bin/
-	@cp ./vendor/glfw/lib/glfw3.dll ../Sandbox/bin/
+	@cp ./lib/libStellar$(LIB_EXT) ../Sandbox/bin/
+	@cp ./vendor/glfw/libs/$(GLFW_LIB) ../Sandbox/bin/
 
 # Update dependencies with each compilation
 override CPPFLAGS += -MMD
