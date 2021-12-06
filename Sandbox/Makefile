@@ -10,13 +10,14 @@ ifeq ($(OS),Windows_NT) # OS is a preexisting environment variable on Windows
 	EXE_EXT = .exe
 else
 	UNAME := $(shell uname -s)
+	EXPORT = export
 	ifeq ($(UNAME),Darwin)
 		OS = macos
-		LIB_PATH = DYLD_LIBRARY_PATH=./bin
+		LIB_PATH = export DYLD_LIBRARY_PATH=./bin;
 	else 
 		ifeq ($(UNAME),Linux)
 			OS = linux
-			LIB_PATH = LD_LIBRARY_PATH=./bin
+			LIB_PATH = export LD_LIBRARY_PATH=./bin;
 		else
 			$(error OS not supported by this Makefile)
 		endif
@@ -60,10 +61,7 @@ $(BUILD_DIR)/%.o: %.cpp
 	@$(call run_and_test,$(CC) $(CFLAGS) $(INCLUDES) -c $<  -o $@)
 
 run:
-ifneq ($(OS),windows)
-	export $(LIB_PATH); 
-endif
-	\
+	$(EXPORT) $(LIB_PATH) \
 	./bin/Sandbox$(EXE_EXT)
 
 clean:
