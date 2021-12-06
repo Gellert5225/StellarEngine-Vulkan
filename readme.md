@@ -8,7 +8,8 @@ A custom game engine using C++ and Vulkan API
 ## Introduction
 Stellar Engine is a cross-platform game engine using Vulkan API. 
 
-Currently it is at the very initial state of development. It supports Windows10(64 bit) and Linux(64 bit)
+Currently it is at the very initial state of development. It supports Windows10(64 bit), Linux(64 bit) and macOS with Intel CPU. 
+> Although theoretically it should support Apple Silicon but I do not have a M1 Mac
 
 ## Installation
 
@@ -24,7 +25,7 @@ I will try to list as detailed as possible. However I have not tested the build 
     - GNU GCC
     - X11
 - macOS:
-    - IDK yet
+    - Clang++
 
 ### Running
 
@@ -40,7 +41,7 @@ Now you just need to build the Sandbox project:
 
 ## ToDo
 
-- [ ] macOS support
+- [x] macOS support
 - [ ] Window abstraction
 - [ ] Layer
 - [ ] Events
