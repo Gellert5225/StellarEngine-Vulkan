@@ -1,5 +1,4 @@
-#ifndef CORE_H
-#define CORE_H
+#pragma once
 
 #if defined(_MSC_VER)
     #define EXPORT __declspec(dllexport)
@@ -17,6 +16,4 @@
     #define STLR_API EXPORT
 #else
     #define STLR_API IMPORT
-#endif
-
 #endif

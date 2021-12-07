@@ -1,14 +1,8 @@
+#include "stlrpch.h"
 #include "Application.h"
-#include <iostream>
 
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
-
-#include <stdexcept>
-#include <cstdlib>
-#include <vector>
-#include <string>
-#include <cstring>
 
 const uint32_t WIDTH = 800;
 const uint32_t HEIGHT = 600;
@@ -85,7 +79,6 @@ private:
         for (int i = 0; i < glfwExtensionCount; i++) {
             bool found = false;
             for (const auto& extension : extensions) {
-                std::cout << extension.extensionName << std::endl;
                 if (!strcmp(glfwExtensions[i], extension.extensionName))
                     found = true;
             }
@@ -101,7 +94,6 @@ namespace Stellar {
     Application::~Application() {}
 
     void Application::run() {
-        std::cout << "Hello wor" << std::endl;
         HelloTriangleApplication app;
         app.run();
     }

@@ -1,6 +1,4 @@
-#ifndef STELLAR_H
-#define STELLAR_H
+#pragma once
 
 #include "Stellar/Application.h"
-
-#endif
+#include "Stellar/Log.h"

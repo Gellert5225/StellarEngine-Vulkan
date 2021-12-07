@@ -27,7 +27,7 @@ endif
 # Compiler and flags
 CC = g++
 CFLAGS = -std=c++17 -Wall -g -O3
-INCLUDES = -I../Stellar/src/
+INCLUDES = -I../Stellar/src/ -I../Stellar/vendor/spdlog/include
 LFLAGS = -L./bin
 LIBS = -lStellar
 

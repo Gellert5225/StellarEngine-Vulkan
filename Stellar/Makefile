@@ -2,11 +2,14 @@ LIB_NAME = Stellar
 
 # Commen flags for all platforms
 CXX      = g++
-CPPFLAGS = -I ./vendor/glfw/include
+CPPFLAGS = -I ./vendor/glfw/include -I ./vendor/spdlog/include -I ./src
 CXXFLAGS = -std=c++17 -g -O3 -DSTLR_BUILD_DLL -fPIC
 LDFLAGS  = 
 LDLIBS   =
 RM       = rm -f
+PCH_SRC  = ./src/stlrpch.h
+PCH_OUT  = ./src/stlrpch.h.gch
+PCH_FLAGS = -x c++-header -std=c++17 -g -O3 -DSTLR_BUILD_DLL -fPIC
 
 # Target OS detection
 ifeq ($(OS),Windows_NT) # OS is a preexisting environment variable on Windows
@@ -71,6 +74,10 @@ all: $(EXECUTABLES) lib/lib$(LIB_NAME)$(LIB_EXT)
 override CPPFLAGS += -MMD
 -include $(shell find build -name "*.d" 2> /dev/null)
 
+# Compiles PCH
+$(PCH_OUT): $(PCH_SRC) 
+	@$(call run_and_test,$(CXX) $(CPPFLAGS) $(PCH_FLAGS) -o $@ -c $<)
+
 bin/%: build/%.o | lib/lib$(LIB_NAME)$(LIB_EXT)
 	@mkdir -p $(@D)
 	@$(call run_and_test,$(CXX) $(LDFLAGS) $< $(LDLIBS) -o $@)
@@ -79,10 +86,10 @@ lib/lib$(LIB_NAME)$(LIB_EXT): $(O_FILES)
 	@mkdir -p $(@D)
 	@$(call run_and_test,$(CXX) $(LDFLAGS) $(LDLIBS) $^ -shared -o $@)
 
-build/%.o: %.cpp
+build/%.o: %.cpp $(PCH_OUT)
 	@mkdir -p $(@D)
-	@$(call run_and_test,$(CXX) -c $(CPPFLAGS) $(CXXFLAGS) $< -o $@)
+	@$(call run_and_test,$(CXX) -c $(CPPFLAGS) $(CXXFLAGS) -include $(PCH_SRC) $< -o $@)
 
 clean:
 	@echo "Cleaning"
-	@$(RM) -r bin build lib
+	@$(RM) -r bin build lib **/*.gch **/*.d

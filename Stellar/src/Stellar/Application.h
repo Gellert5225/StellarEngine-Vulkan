@@ -1,5 +1,4 @@
-#ifndef APPLICATION_H
-#define APPLICATION_H
+#pragma once
 
 #include "Core.h"
 
@@ -11,5 +10,3 @@ namespace Stellar {
         void run();
     };
 }
-
-#endif
