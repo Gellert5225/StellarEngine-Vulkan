@@ -2,7 +2,7 @@
 
 #include "Core.h"
 #include "spdlog/spdlog.h"
-#include "spdlog/sinks/stdout_color_sinks.h"
+#include "spdlog/fmt/ostr.h"
 
 namespace Stellar {
     class STLR_API Log {
@@ -24,8 +24,8 @@ namespace Stellar {
 #define STLR_CORE_FATAL(...) ::Stellar::Log::GetCoreLogger()->fatal(__VA_ARGS__)
 
 // client
-#define STLR_CLIENT_TRACE(...) ::Stellar::Log::GetCoreLogger()->trace(__VA_ARGS__)
-#define STLR_CLIENT_INFO(...)  ::Stellar::Log::GetCoreLogger()->info(__VA_ARGS__)
-#define STLR_CLIENT_WARN(...)  ::Stellar::Log::GetCoreLogger()->warn(__VA_ARGS__)
-#define STLR_CLIENT_ERROR(...) ::Stellar::Log::GetCoreLogger()->error(__VA_ARGS__)
-#define STLR_CLIENT_FATAL(...) ::Stellar::Log::GetCoreLogger()->fatal(__VA_ARGS__)
+#define STLR_TRACE(...) ::Stellar::Log::GetClientLogger()->trace(__VA_ARGS__)
+#define STLR_INFO(...)  ::Stellar::Log::GetClientLogger()->info(__VA_ARGS__)
+#define STLR_WARN(...)  ::Stellar::Log::GetClientLogger()->warn(__VA_ARGS__)
+#define STLR_ERROR(...) ::Stellar::Log::GetClientLogger()->error(__VA_ARGS__)
+#define STLR_FATAL(...) ::Stellar::Log::GetClientLogger()->fatal(__VA_ARGS__)

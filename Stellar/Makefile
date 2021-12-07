@@ -3,7 +3,7 @@ LIB_NAME = Stellar
 # Commen flags for all platforms
 CXX      = g++
 CPPFLAGS = -I ./vendor/glfw/include -I ./vendor/spdlog/include -I ./src
-CXXFLAGS = -std=c++17 -g -O3 -DSTLR_BUILD_DLL -fPIC
+CXXFLAGS = -std=c++17 -g -O2 -DSTLR_BUILD_DLL -fPIC -Wall
 LDFLAGS  = 
 LDLIBS   =
 RM       = rm -f

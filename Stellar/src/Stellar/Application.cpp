@@ -4,6 +4,9 @@
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
+#include "Stellar/Events/ApplicationEvent.h"
+#include "Stellar/Log.h"
+
 const uint32_t WIDTH = 800;
 const uint32_t HEIGHT = 600;
 
@@ -76,7 +79,7 @@ private:
         std::vector<VkExtensionProperties> extensions(extensionCount);
         vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, extensions.data());
 
-        for (int i = 0; i < glfwExtensionCount; i++) {
+        for (uint32_t i = 0; i < glfwExtensionCount; i++) {
             bool found = false;
             for (const auto& extension : extensions) {
                 if (!strcmp(glfwExtensions[i], extension.extensionName))
@@ -94,6 +97,9 @@ namespace Stellar {
     Application::~Application() {}
 
     void Application::run() {
+        WindowResizeEvent e(1280, 720);
+        STLR_INFO(e);
+
         HelloTriangleApplication app;
         app.run();
     }
