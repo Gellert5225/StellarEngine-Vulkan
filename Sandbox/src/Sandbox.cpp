@@ -1,11 +1,11 @@
 #include <Stellar.h>
 
-int main(int argc, char** argv) {
-    Stellar::Log::Init();
-    STLR_CORE_INFO("Welcome to Stellar Engine");
-    STLR_CORE_WARN("This engine is still under active development!");
+class Sandbox: public Stellar::Application {
+    public:
+        Sandbox() {}
+        ~Sandbox() {}
+};
 
-    auto app = Stellar::Application();
-    app.run();
-    return 0;
+Stellar::Application* Stellar::CreateApplication() {
+	return new Sandbox();
 }
