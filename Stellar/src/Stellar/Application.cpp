@@ -20,8 +20,7 @@ namespace Stellar {
         WindowResizeEvent e(1280, 720);
         STLR_INFO(e);
 
-        // HelloTriangleApplication app;
-        // app.run();
+        initVulkan();
 
         while (!glfwWindowShouldClose(m_Window->getGLFWWindow())) {
             m_Window->onUpdate();
@@ -29,6 +28,7 @@ namespace Stellar {
     }
 
     void Application::initVulkan() {
+        STLR_CORE_INFO("Initializing Vulkan");
         VkApplicationInfo appInfo{};
         appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
         appInfo.pApplicationName = "Stellar Engine Sandbox";
@@ -65,10 +65,9 @@ namespace Stellar {
         for (uint32_t i = 0; i < glfwExtensionCount; i++) {
             bool found = false;
             for (const auto& extension : extensions) {
-                if (!strcmp(glfwExtensions[i], extension.extensionName)){
-                    std::cout << extension.extensionName << std::endl;
+                STLR_CORE_INFO("Extension found: {0}", extension.extensionName);
+                if (!strcmp(glfwExtensions[i], extension.extensionName))
                     found = true;
-                }
             }
             if (!found)
                 throw std::runtime_error("Cannot find " + std::string(glfwExtensions[i]));
