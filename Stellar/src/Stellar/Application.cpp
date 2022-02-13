@@ -9,43 +9,26 @@
 const uint32_t WIDTH = 800;
 const uint32_t HEIGHT = 600;
 
-class HelloTriangleApplication {
-public:
-    void run() {
-        initWindow();
-        initVulkan();
-        mainLoop();
-        cleanup();
-    }
-private:
-    GLFWwindow* window;
-    VkInstance instance;
-
-private:
-    void initWindow() {
-        glfwInit();
-        glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-        glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
-
-        window = glfwCreateWindow(WIDTH, HEIGHT, "Stellar Engine", nullptr, nullptr);
+namespace Stellar {
+    Application::Application() {
+        m_Window = std::unique_ptr<Window>(Window::Create());
     }
 
-    void initVulkan() {
-        createInstance();
-    }
+    Application::~Application() {}
 
-    void mainLoop() {
-        while(!glfwWindowShouldClose(window)) {
-            glfwPollEvents();
+    void Application::run() {
+        WindowResizeEvent e(1280, 720);
+        STLR_INFO(e);
+
+        // HelloTriangleApplication app;
+        // app.run();
+
+        while (!glfwWindowShouldClose(m_Window->getGLFWWindow())) {
+            m_Window->onUpdate();
         }
     }
 
-    void cleanup() {
-        glfwDestroyWindow(window);
-        glfwTerminate();
-    }
-
-    void createInstance() {
+    void Application::initVulkan() {
         VkApplicationInfo appInfo{};
         appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
         appInfo.pApplicationName = "Stellar Engine Sandbox";
@@ -72,7 +55,8 @@ private:
         checkIfExtensionExists(glfwExtensions, glfwExtensionCount);
     }
 
-    void checkIfExtensionExists(const char** glfwExtensions, const uint32_t glfwExtensionCount) {
+    void Application::checkIfExtensionExists(const char** glfwExtensions, 
+                                            const uint32_t glfwExtensionCount) const {
         uint32_t extensionCount = 0;
         vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
         std::vector<VkExtensionProperties> extensions(extensionCount);
@@ -88,26 +72,6 @@ private:
             }
             if (!found)
                 throw std::runtime_error("Cannot find " + std::string(glfwExtensions[i]));
-        }
-    }
-};
-
-namespace Stellar {
-    Application::Application() {
-        m_Window = std::unique_ptr<Window>(Window::Create());
-    }
-
-    Application::~Application() {}
-
-    void Application::run() {
-        WindowResizeEvent e(1280, 720);
-        STLR_INFO(e);
-
-        // HelloTriangleApplication app;
-        // app.run();
-
-        while (!glfwWindowShouldClose(m_Window->getGLFWWindow())) {
-            m_Window->onUpdate();
         }
     }
 }
