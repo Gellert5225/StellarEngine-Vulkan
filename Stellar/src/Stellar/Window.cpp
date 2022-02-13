@@ -20,9 +20,7 @@ namespace Stellar {
         m_Data.Width = property.width;
         m_Data.Height = property.height;
 
-        int success = glfwInit();
-		STLR_CORE_ASSERT(success, "Could not initialize GLFW!");
-		//glfwSetErrorCallback(GLFWErrorCallback);
+        glfwInit();
         glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
