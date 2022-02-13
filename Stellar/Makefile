@@ -34,7 +34,7 @@ else
 endif
 # OS-specific settings
 ifeq ($(OS),windows)
-	LDFLAGS += -L./vendor/glfw/libs -L"C:\Windows\System32"
+	LDFLAGS += -L./vendor/glfw/libs -L./vendor/vulkan
 	CPPFLAGS += -I "C:\VulkanSDK\1.2.198.1\Include"
 	LDLIBS += -lglfw3 -lopengl32 -lgdi32 -lvulkan-1
 
@@ -84,7 +84,7 @@ bin/%: build/%.o | lib/lib$(LIB_NAME)$(LIB_EXT)
 
 lib/lib$(LIB_NAME)$(LIB_EXT): $(O_FILES)
 	@mkdir -p $(@D)
-	@$(call run_and_test,$(CXX) $(LDFLAGS) $(LDLIBS) $^ -shared -o $@)
+	@$(call run_and_test, ($(CXX) -shared -o $@ $^ $(LDFLAGS) $(LDLIBS) -Wl,--out-implib,lib/libStellar.a))
 
 build/%.o: %.cpp $(PCH_OUT)
 	@mkdir -p $(@D)
@@ -92,4 +92,4 @@ build/%.o: %.cpp $(PCH_OUT)
 
 clean:
 	@echo "Cleaning"
-	@$(RM) -r bin build lib **/*.gch **/*.d
+	@$(RM) -r bin build lib **/*.gch **/*.d *.o *.a *.def *.s

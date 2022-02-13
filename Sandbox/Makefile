@@ -4,10 +4,18 @@ BUILD_DIR := build
 BIN_DIR := bin
 RM = rm -f
 
+# Compiler and flags
+CC = g++
+CFLAGS = -std=c++17 -Wall -g -O3
+INCLUDES = -I../Stellar/src/ -I../Stellar/vendor/spdlog/include -I../Stellar/vendor/glfw/include
+LFLAGS = -L./bin
+LIBS = -lStellar
+
 # OS check
 ifeq ($(OS),Windows_NT) # OS is a preexisting environment variable on Windows
 	OS = windows
 	EXE_EXT = .exe
+	INCLUDES += -I "C:\VulkanSDK\1.2.198.1\Include"
 else
 	UNAME := $(shell uname -s)
 	EXPORT = export
@@ -23,13 +31,6 @@ else
 		endif
 	endif
 endif
-
-# Compiler and flags
-CC = g++
-CFLAGS = -std=c++17 -Wall -g -O3
-INCLUDES = -I../Stellar/src/ -I../Stellar/vendor/spdlog/include
-LFLAGS = -L./bin
-LIBS = -lStellar
 
 # Source files
 SRC_DIR = src
@@ -58,7 +59,7 @@ $(BIN_DIR)/$(MAIN): $(OBJS)
 
 $(BUILD_DIR)/%.o: %.cpp
 	@mkdir -p '$(@D)'
-	@$(call run_and_test,$(CC) $(CFLAGS) $(INCLUDES) -c $<  -o $@)
+	@$(call run_and_test, ($(CC) $(CFLAGS) $(INCLUDES) -c $<  -o $@))
 
 run:
 	$(EXPORT) $(LIB_PATH) \

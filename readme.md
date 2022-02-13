@@ -20,7 +20,8 @@ I will try to list as detailed as possible. However I have not tested the build 
 - Vulkan
 - C++17
 - Windows:
-    - Cygwin with GCC installed
+    - MinGW with GCC installed
+    - Follow tutorial here: https://github.com/Gellert5225/StellarEngine-Vulkan.git
 - Linux:
     - GNU GCC
     - X11
@@ -43,7 +44,7 @@ Now you just need to build the Sandbox project:
 
 - [x] macOS support
 - [x] Window abstraction
-- [ ] Layer
+- [x] Layer
 - [x] Events
 - [ ] ImGui
 - [ ] Triangle
