@@ -34,6 +34,8 @@ namespace Stellar {
         virtual void setVsync(bool enabled);
         virtual bool isVsync() const;
 
+        virtual GLFWwindow* getGLFWWindow() const;
+
         static Window* Create(const WindowProperty& property = WindowProperty());
     private:
         GLFWwindow* m_Window;

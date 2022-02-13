@@ -1,7 +1,6 @@
 #include "stlrpch.h"
 #include "Application.h"
 
-#define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
 #include "Stellar/Events/ApplicationEvent.h"
@@ -82,8 +81,10 @@ private:
         for (uint32_t i = 0; i < glfwExtensionCount; i++) {
             bool found = false;
             for (const auto& extension : extensions) {
-                if (!strcmp(glfwExtensions[i], extension.extensionName))
+                if (!strcmp(glfwExtensions[i], extension.extensionName)){
+                    std::cout << extension.extensionName << std::endl;
                     found = true;
+                }
             }
             if (!found)
                 throw std::runtime_error("Cannot find " + std::string(glfwExtensions[i]));
@@ -92,7 +93,9 @@ private:
 };
 
 namespace Stellar {
-    Application::Application() {}
+    Application::Application() {
+        m_Window = std::unique_ptr<Window>(Window::Create());
+    }
 
     Application::~Application() {}
 
@@ -100,7 +103,11 @@ namespace Stellar {
         WindowResizeEvent e(1280, 720);
         STLR_INFO(e);
 
-        HelloTriangleApplication app;
-        app.run();
+        // HelloTriangleApplication app;
+        // app.run();
+
+        while (!glfwWindowShouldClose(m_Window->getGLFWWindow())) {
+            m_Window->onUpdate();
+        }
     }
 }
