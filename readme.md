@@ -42,9 +42,9 @@ Now you just need to build the Sandbox project:
 ## ToDo
 
 - [x] macOS support
-- [ ] Window abstraction
+- [x] Window abstraction
 - [ ] Layer
-- [ ] Events
+- [x] Events
 - [ ] ImGui
 - [ ] Triangle
 - [ ] Shader library

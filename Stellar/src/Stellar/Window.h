@@ -2,8 +2,8 @@
 
 #include "stlrpch.h"
 
-#include "Stellar/Core.h"
-#include "Stellar/Events/Event.h"
+#include "Core.h"
+#include "Events/Event.h"
 
 #include <GLFW/glfw3.h>
 

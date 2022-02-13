@@ -3,26 +3,47 @@
 
 #include <GLFW/glfw3.h>
 
-#include "Stellar/Events/ApplicationEvent.h"
-#include "Stellar/Log.h"
+#include "Log.h"
 
 const uint32_t WIDTH = 800;
 const uint32_t HEIGHT = 600;
 
 namespace Stellar {
+    #define BIND_EVENT_FN(X) std::bind(&X, this, std::placeholders::_1)
+
     Application::Application() {
         m_Window = std::unique_ptr<Window>(Window::Create());
+        m_Window->setEventCallback(BIND_EVENT_FN(Application::onEvent));
     }
 
     Application::~Application() {}
 
-    void Application::run() {
-        WindowResizeEvent e(1280, 720);
-        STLR_INFO(e);
+    void Application::onEvent(Event& e) {
+        EventDispatcher diapatcher(e);
 
+        // STLR_CORE_TRACE("{0}", e);
+
+        for (auto it = m_LayerStack.end(); it != m_LayerStack.begin();) {
+            (*--it)->onEvent(e);
+            if (e.handled)
+                break;
+        }
+    }
+
+    void Application::pushLayer(Layer* layer) {
+        m_LayerStack.pushLayer(layer);
+    }
+
+    void Application::pushOverlay(Layer* layer) {
+        m_LayerStack.pushOverlay(layer);
+    }
+
+    void Application::run() {
         initVulkan();
 
         while (!glfwWindowShouldClose(m_Window->getGLFWWindow())) {
+            for (Layer* layer : m_LayerStack)
+                layer->onUpdate();
             m_Window->onUpdate();
         }
     }

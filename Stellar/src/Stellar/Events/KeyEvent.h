@@ -14,6 +14,7 @@ namespace Stellar {
     };
 
     class STLR_API KeyPressedEvent : public KeyEvent {
+    public:
         KeyPressedEvent(int keyCode, int repeatCount)
             : KeyEvent(keyCode), m_RepeatCount(repeatCount) {}
         inline int getRepeatCount() const { return m_RepeatCount; }
