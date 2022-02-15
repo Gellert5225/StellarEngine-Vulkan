@@ -6,6 +6,7 @@ class Sandbox: public Stellar::Application {
     public:
         Sandbox() {
             pushLayer(new ExampleLayer());
+            pushLayer(new Stellar::ImGuiLayer());
         }
         ~Sandbox() {}
 };

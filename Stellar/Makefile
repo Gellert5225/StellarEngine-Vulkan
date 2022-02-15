@@ -2,7 +2,7 @@ LIB_NAME = Stellar
 
 # Commen flags for all platforms
 CXX      = g++
-CPPFLAGS = -I ./vendor/glfw/include -I ./vendor/spdlog/include -I ./src
+CPPFLAGS = -I ./vendor/glfw/include -I ./vendor/spdlog/include -I./vendor/imgui -I ./src
 CXXFLAGS = -std=c++17 -g -O2 -DSTLR_BUILD_DLL -fPIC -Wall
 LDFLAGS  = 
 LDLIBS   =
@@ -60,10 +60,12 @@ include $(wildcard ../PrettyPrint.inc)
 
 # Find the source files that will be used.
 SRC_DIR = src
+IMGUI_DIR = vendor/imgui
 EXE_SRC_FILES = $(wildcard *.cpp)
 EXECUTABLES = $(patsubst %.cpp,bin/%,$(EXE_SRC_FILES))
 SRC_FILES := $(sort $(shell find $(SRC_DIR) -name '*.cpp'))
-O_FILES = $(patsubst %.cpp,build/%.o,$(SRC_FILES))
+IMGUI_SRC_FILES := $(wildcard $(IMGUI_DIR)/*.cpp)
+O_FILES = $(patsubst %.cpp,build/%.o,$(SRC_FILES) $(IMGUI_SRC_FILES))
 
 all: $(EXECUTABLES) lib/lib$(LIB_NAME)$(LIB_EXT)
 	@mkdir -p ../Sandbox/bin

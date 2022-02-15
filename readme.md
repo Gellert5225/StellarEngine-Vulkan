@@ -6,7 +6,7 @@ A custom game engine using C++ and Vulkan API
 * [ToDo](#todo)
 
 ## Introduction
-Stellar Engine is a cross-platform game engine using Vulkan API. 
+Stellar Engine is a cross-platform game engine using Vulkan API. Inspired by Cherno's [Hazel Engine](https://github.com/TheCherno/Hazel)
 
 Currently it is at the very initial state of development. It supports Windows10(64 bit), Linux(64 bit) and macOS with Intel CPU. 
 > Although theoretically it should support Apple Silicon but I do not have a M1 Mac
@@ -21,7 +21,7 @@ I will try to list as detailed as possible. However I have not tested the build 
 - C++17
 - Windows:
     - MinGW with GCC installed
-    - Follow tutorial here: https://github.com/Gellert5225/StellarEngine-Vulkan.git
+    - Follow tutorial here: https://www.msys2.org/
 - Linux:
     - GNU GCC
     - X11

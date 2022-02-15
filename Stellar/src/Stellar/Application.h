@@ -17,7 +17,12 @@ namespace Stellar {
 
         void pushLayer(Layer*);
         void pushOverlay(Layer*);
+
+        inline static Application& Get() { return *s_Instance; }
+        inline Window& getWindow() { return *m_Window; }
     private:
+        static Application* s_Instance;
+
         std::unique_ptr<Window> m_Window;
         VkInstance instance;
         bool m_Running = true;
