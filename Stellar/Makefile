@@ -35,7 +35,7 @@ endif
 # OS-specific settings
 ifeq ($(OS),windows)
 	LDFLAGS += -L./vendor/glfw/libs -L./vendor/vulkan
-	CPPFLAGS += -I "C:\VulkanSDK\1.2.198.1\Include"
+	CPPFLAGS += -I C:/VulkanSDK/1.2.198.1/Include
 	LDLIBS += -lglfw3 -lopengl32 -lgdi32 -lvulkan-1
 
 	ifeq ($(win32),1)
