@@ -29,8 +29,18 @@ namespace Stellar {
         LayerStack m_LayerStack;
 
         // Vulkan
+        VkDebugUtilsMessengerEXT debugMessenger;
         void initVulkan();
         void checkIfExtensionExists(const char**, const uint32_t) const;
+        void setupDebugMessenger();
+        void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT&);
+        bool checkValidationLayerSupport() const;
+        std::vector<const char*> getRequiredExtensions() const;
+        VkResult CreateDebugUtilsMessengerEXT(VkInstance, 
+                                            const VkDebugUtilsMessengerCreateInfoEXT*, 
+                                            const VkAllocationCallbacks*, 
+                                            VkDebugUtilsMessengerEXT*);
+        static void DestroyDebugUtilsMessengerEXT(VkInstance, VkDebugUtilsMessengerEXT, const VkAllocationCallbacks*);
     };
 
     Application* CreateApplication();

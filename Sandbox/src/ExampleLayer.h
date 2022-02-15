@@ -6,7 +6,7 @@ public:
         : Layer("Example") {}
 
     void onUpdate() override {
-        STLR_INFO("ExampleLayer::Update");
+        // STLR_INFO("ExampleLayer::Update");
     }
 
     void onEvent(Stellar::Event& event) override {
