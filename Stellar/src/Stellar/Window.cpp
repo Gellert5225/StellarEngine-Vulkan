@@ -24,7 +24,7 @@ namespace Stellar {
         m_Data.Width = property.width;
         m_Data.Height = property.height;
 
-        int success = glfwInit();
+        [[maybe_unused]] int success = glfwInit();
         STLR_CORE_ASSERT(success, "Could not init GLFW");
         glfwSetErrorCallback(GLFWErrorCallback);
         glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
@@ -75,6 +75,7 @@ namespace Stellar {
                     data.EventCallback(event);
                     break;
                 }
+                default: break;
             }
         });
 
@@ -93,6 +94,7 @@ namespace Stellar {
                     data.EventCallback(event);
                     break;
                 }
+                default: break;
             }
         });
 

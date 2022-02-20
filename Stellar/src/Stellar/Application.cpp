@@ -1,8 +1,6 @@
 #include "stlrpch.h"
 #include "Application.h"
 
-#include <GLFW/glfw3.h>
-
 #include "Log.h"
 
 const std::vector<const char*> validationLayers = {
@@ -38,7 +36,7 @@ namespace Stellar {
         m_Window->setEventCallback(BIND_EVENT_FN(Application::onEvent));
     }
 
-    Application::~Application() {}
+    Application::~Application() = default;
 
     void Application::onEvent(Event& e) {
         EventDispatcher diapatcher(e);
@@ -74,7 +72,7 @@ namespace Stellar {
         vkDestroyInstance(instance, nullptr);
     }
 
-    bool Application::checkValidationLayerSupport() const {
+    bool Application::checkValidationLayerSupport() {
         uint32_t layerCount;
         vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
 
@@ -180,9 +178,9 @@ namespace Stellar {
         setupDebugMessenger();
     }
 
-    VkResult Application::CreateDebugUtilsMessengerEXT(VkInstance instance, 
-                                                    const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, 
-                                                    const VkAllocationCallbacks* pAllocator, 
+    VkResult Application::CreateDebugUtilsMessengerEXT(VkInstance instance,
+                                                    const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo,
+                                                    const VkAllocationCallbacks* pAllocator,
                                                     VkDebugUtilsMessengerEXT* pDebugMessenger) {
         auto func = (PFN_vkCreateDebugUtilsMessengerEXT) vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
         if (func != nullptr) {
@@ -199,7 +197,7 @@ namespace Stellar {
         }
     }
 
-    std::vector<const char*> Application::getRequiredExtensions() const {
+    std::vector<const char*> Application::getRequiredExtensions() {
         uint32_t glfwExtensionCount = 0;
         const char** glfwExtensions;
         glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
@@ -213,8 +211,8 @@ namespace Stellar {
         return extensions;
     }
 
-    void Application::checkIfExtensionExists(const char** glfwExtensions, 
-                                            const uint32_t glfwExtensionCount) const {
+    void Application::checkIfExtensionExists(const char** glfwExtensions,
+                                             uint32_t glfwExtensionCount) {
         uint32_t extensionCount = 0;
         vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
         std::vector<VkExtensionProperties> extensions(extensionCount);

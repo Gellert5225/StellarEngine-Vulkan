@@ -7,38 +7,40 @@
 
 #include <GLFW/glfw3.h>
 
+#include <utility>
+
 namespace Stellar {
     struct WindowProperty {
         std::string title;
         unsigned int width;
         unsigned int height;
 
-        WindowProperty(const std::string& title = "Stellar Engine",
+        explicit WindowProperty(std::string  title = "Stellar Engine",
                        unsigned int width = 1280,
                        unsigned int height = 720)
-            : title(title), width(width), height(height) {}
+            : title(std::move(title)), width(width), height(height) {}
     };
 
     class STLR_API Window {
     public:
         using EventCallbackFn = std::function<void(Event&)>;
 
-        Window(const WindowProperty&);
+        explicit Window(const WindowProperty&);
         virtual ~Window();
 
         virtual void onUpdate();
-        virtual unsigned int getWidth() const;
-        virtual unsigned int getHeight() const;
+        [[nodiscard]] virtual unsigned int getWidth() const;
+        [[nodiscard]] virtual unsigned int getHeight() const;
 
         virtual void setEventCallback(const EventCallbackFn& callback);
         virtual void setVsync(bool enabled);
-        virtual bool isVsync() const;
+        [[nodiscard]] virtual bool isVsync() const;
 
-        virtual GLFWwindow* getGLFWWindow() const;
+        [[nodiscard]] virtual GLFWwindow* getGLFWWindow() const;
 
         static Window* Create(const WindowProperty& property = WindowProperty());
     private:
-        GLFWwindow* m_Window;
+        GLFWwindow* m_Window{};
 
         struct WindowData {
 			std::string Title;

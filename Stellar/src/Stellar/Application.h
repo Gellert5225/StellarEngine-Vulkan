@@ -22,25 +22,26 @@ namespace Stellar {
         inline Window& getWindow() { return *m_Window; }
     private:
         static Application* s_Instance;
-
         std::unique_ptr<Window> m_Window;
-        VkInstance instance;
         bool m_Running = true;
         LayerStack m_LayerStack;
 
         // Vulkan
-        VkDebugUtilsMessengerEXT debugMessenger;
+        VkInstance instance = VK_NULL_HANDLE;
+        VkDebugUtilsMessengerEXT debugMessenger = VK_NULL_HANDLE;
         void initVulkan();
-        void checkIfExtensionExists(const char**, const uint32_t) const;
         void setupDebugMessenger();
-        void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT&);
-        bool checkValidationLayerSupport() const;
-        std::vector<const char*> getRequiredExtensions() const;
-        VkResult CreateDebugUtilsMessengerEXT(VkInstance, 
-                                            const VkDebugUtilsMessengerCreateInfoEXT*, 
-                                            const VkAllocationCallbacks*, 
+        static void checkIfExtensionExists(const char**, uint32_t);
+        static void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT&);
+        static bool checkValidationLayerSupport();
+        static std::vector<const char*> getRequiredExtensions();
+        static VkResult CreateDebugUtilsMessengerEXT(VkInstance,
+                                            const VkDebugUtilsMessengerCreateInfoEXT*,
+                                            const VkAllocationCallbacks*,
                                             VkDebugUtilsMessengerEXT*);
-        static void DestroyDebugUtilsMessengerEXT(VkInstance, VkDebugUtilsMessengerEXT, const VkAllocationCallbacks*);
+        static void DestroyDebugUtilsMessengerEXT(VkInstance, 
+                                                VkDebugUtilsMessengerEXT,
+                                                const VkAllocationCallbacks*);
     };
 
     Application* CreateApplication();
