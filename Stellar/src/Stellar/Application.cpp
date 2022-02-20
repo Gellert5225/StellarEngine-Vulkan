@@ -3,10 +3,6 @@
 
 #include "Log.h"
 
-const std::vector<const char*> validationLayers = {
-    "VK_LAYER_KHRONOS_validation"
-};
-
 #ifdef NDEBUG
     const bool enableValidationLayers = false;
 #else
@@ -14,6 +10,9 @@ const std::vector<const char*> validationLayers = {
 #endif
 
 namespace Stellar {
+    const std::vector<const char*> Application::validationLayers = {
+            "VK_LAYER_KHRONOS_validation"
+    };
     #define BIND_EVENT_FN(X) std::bind(&X, this, std::placeholders::_1)
 
     static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(
@@ -22,7 +21,14 @@ namespace Stellar {
         const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
         void* pUserData) {
 
-        std::cerr << "validation layer: " << pCallbackData->pMessage << std::endl;
+        if (messageSeverity & VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT)
+            STLR_CORE_TRACE("Validation layer: {0}", pCallbackData-> pMessage);
+        else if (messageSeverity & VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT)
+            STLR_CORE_INFO("Validation layer: {0}", pCallbackData->pMessage);
+        else if (messageSeverity & VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT)
+            STLR_CORE_WARN("Validation layer: {0}", pCallbackData->pMessage);
+        else
+            STLR_CORE_ERROR("Validation layer: {0}", pCallbackData->pMessage);
 
         return VK_FALSE;
     }
@@ -65,9 +71,9 @@ namespace Stellar {
             m_Window->onUpdate();
         }
 
-        if (enableValidationLayers) {
+        #ifndef NDEBUG
             DestroyDebugUtilsMessengerEXT(instance, debugMessenger, nullptr);
-        }
+        #endif
 
         vkDestroyInstance(instance, nullptr);
     }
@@ -106,7 +112,9 @@ namespace Stellar {
     }
 
     void Application::setupDebugMessenger() {
-        if (!enableValidationLayers) return;
+        #ifdef NDEBUG
+            return;
+        #endif
 
         VkDebugUtilsMessengerCreateInfoEXT createInfo;
         populateDebugMessengerCreateInfo(createInfo);
@@ -117,9 +125,10 @@ namespace Stellar {
     }
 
     void Application::initVulkan() {
-        if (enableValidationLayers && !checkValidationLayerSupport()) {
-            throw std::runtime_error("validation layers requested, but not available!");
-        }
+        #ifndef NDEBUG
+            if (!checkValidationLayerSupport())
+                throw std::runtime_error("validation layers requested, but not available!");
+        #endif
 
         STLR_CORE_INFO("Initializing Vulkan");
         VkApplicationInfo appInfo{};
@@ -147,29 +156,29 @@ namespace Stellar {
         }
         checkIfExtensionExists(glfwExtensions, glfwExtensionCount);
 
-        if (enableValidationLayers) {
+        #ifndef NDEBUG
             createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
             createInfo.ppEnabledLayerNames = validationLayers.data();
-        } else {
+        #else
             createInfo.enabledLayerCount = 0;
-        }
+        #endif
 
         auto extensions = getRequiredExtensions();
         createInfo.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
         createInfo.ppEnabledExtensionNames = extensions.data();
 
         VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo{};
-        if (enableValidationLayers) {
+        #ifndef NDEBUG
             createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
             createInfo.ppEnabledLayerNames = validationLayers.data();
 
             populateDebugMessengerCreateInfo(debugCreateInfo);
             createInfo.pNext = (VkDebugUtilsMessengerCreateInfoEXT*) &debugCreateInfo;
-        } else {
+        #else
             createInfo.enabledLayerCount = 0;
 
             createInfo.pNext = nullptr;
-        }
+        #endif
 
         if (vkCreateInstance(&createInfo, nullptr, &instance) != VK_SUCCESS) {
             throw std::runtime_error("failed to create instance!");
@@ -190,7 +199,9 @@ namespace Stellar {
         }
     }
 
-    void Application::DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator) {
+    void Application::DestroyDebugUtilsMessengerEXT(VkInstance instance,
+                                                    VkDebugUtilsMessengerEXT debugMessenger,
+                                                    const VkAllocationCallbacks* pAllocator) {
         auto func = (PFN_vkDestroyDebugUtilsMessengerEXT) vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT");
         if (func != nullptr) {
             func(instance, debugMessenger, pAllocator);
@@ -204,9 +215,9 @@ namespace Stellar {
 
         std::vector<const char*> extensions(glfwExtensions, glfwExtensions + glfwExtensionCount);
 
-        if (enableValidationLayers) {
+        #ifndef NDEBUG
             extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
-        }
+        #endif
 
         return extensions;
     }

@@ -20,6 +20,8 @@ namespace Stellar {
 
         inline static Application& Get() { return *s_Instance; }
         inline Window& getWindow() { return *m_Window; }
+
+        static const std::vector<const char *> validationLayers;
     private:
         static Application* s_Instance;
         std::unique_ptr<Window> m_Window;
@@ -39,7 +41,7 @@ namespace Stellar {
                                             const VkDebugUtilsMessengerCreateInfoEXT*,
                                             const VkAllocationCallbacks*,
                                             VkDebugUtilsMessengerEXT*);
-        static void DestroyDebugUtilsMessengerEXT(VkInstance, 
+        static void DestroyDebugUtilsMessengerEXT(VkInstance,
                                                 VkDebugUtilsMessengerEXT,
                                                 const VkAllocationCallbacks*);
     };
