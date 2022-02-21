@@ -36,7 +36,7 @@ namespace Stellar {
     Application* Application::s_Instance = nullptr;
 
     Application::Application() {
-        STLR_CORE_ASSERT(!s_Instance, "Application already exists");
+        STLR_CORE_ASSERT(!s_Instance, "Application already exists")
         s_Instance = this;
         m_Window = std::unique_ptr<Window>(Window::Create());
         m_Window->setEventCallback(BIND_EVENT_FN(Application::onEvent));
@@ -45,7 +45,7 @@ namespace Stellar {
     Application::~Application() = default;
 
     void Application::onEvent(Event& e) {
-        EventDispatcher diapatcher(e);
+        // EventDispatcher diapatcher(e);
 
         for (auto it = m_LayerStack.end(); it != m_LayerStack.begin();) {
             (*--it)->onEvent(e);

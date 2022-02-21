@@ -1,4 +1,7 @@
 #pragma once
+
+#include <csignal>
+
 #define GLFW_INCLUDE_VULKAN
 
 #if defined(_MSC_VER)
@@ -23,11 +26,6 @@
     #define STLR_API IMPORT
 #endif
 
-#ifdef STLR_ENABLE_ASSERTS
-    #define STLR_ASSERT(x, ...) { if(!(x)) { STLR_ERROR("Assertion Failed: {0}", __VA_ARGS__); DEBUG_BREAK;} }
-    #define STLR_CORE_ASSERT(x, ...) { if(!(x)) { STLR_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); DEBUG_BREAK;} }
-#else
-    #define STLR_ASSERT(x, ...)
-    #define STLR_CORE_ASSERT(x, ...)
-#endif
+#define STLR_ASSERT(x, ...) { if(!(x)) { STLR_ERROR("Assertion Failed: {0}", __VA_ARGS__); DEBUG_BREAK;} }
+#define STLR_CORE_ASSERT(x, ...) { if(!(x)) { STLR_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); DEBUG_BREAK;} }
 #define BIT(x) (1 << x)

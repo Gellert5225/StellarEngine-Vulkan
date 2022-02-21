@@ -25,7 +25,7 @@ namespace Stellar {
         m_Data.Height = property.height;
 
         [[maybe_unused]] int success = glfwInit();
-        STLR_CORE_ASSERT(success, "Could not init GLFW");
+        STLR_CORE_ASSERT(success, "Could not init GLFW")
         glfwSetErrorCallback(GLFWErrorCallback);
         glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
@@ -33,8 +33,11 @@ namespace Stellar {
         STLR_CORE_INFO("Creating window {0} ({1}, {2})", 
             property.title, property.width, property.height);
 
-        m_Window = glfwCreateWindow(property.width, 
-            property.height, m_Data.Title.c_str(), nullptr, nullptr);
+        m_Window = glfwCreateWindow((int)property.width,
+                                    (int)property.height,
+                                    m_Data.Title.c_str(),
+                                    nullptr,
+                                    nullptr);
         glfwSetWindowUserPointer(m_Window, &m_Data);
         setVsync(true);
 
