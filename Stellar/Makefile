@@ -36,7 +36,7 @@ endif
 ifeq ($(OS),windows)
 	LDFLAGS += -L./vendor/glfw/libs -L./vendor/vulkan
 	CPPFLAGS += -I C:/VulkanSDK/1.2.198.1/Include
-	LDLIBS += -lglfw3 -lopengl32 -lgdi32 -lvulkan-1
+	LDLIBS += -lglfw3 -lopengl32 -lgdi32 -lvulkan-1 -Wl,--out-implib,lib/libStellar.a
 
 	ifeq ($(win32),1)
 	$(error Stellar Engine does not support 32 bit os)
@@ -49,7 +49,7 @@ ifeq ($(OS),windows)
 	else ifeq ($(OS),linux)
 		CPPFLAGS +=
 		LDFLAGS += -L./vendor/glfw/libs
-		LDLIBS += -lglfw -lvulkan
+		LDLIBS += -lglfw -lvulkan -Wl,--out-implib,lib/libStellar.a
 endif
 
 # EVERYTHING PAST HERE SHOULD WORK AUTOMATICALLY
@@ -86,11 +86,11 @@ bin/%: build/%.o | lib/lib$(LIB_NAME)$(LIB_EXT)
 
 lib/lib$(LIB_NAME)$(LIB_EXT): $(O_FILES)
 	@mkdir -p $(@D)
-	@$(call run_and_test, ($(CXX) -shared -o $@ $^ $(LDFLAGS) $(LDLIBS) -Wl,--out-implib,lib/libStellar.a))
+	@$(call run_and_test, ($(CXX) -shared -o $@ $^ $(LDFLAGS) $(LDLIBS)))
 
 build/%.o: %.cpp $(PCH_OUT)
 	@mkdir -p $(@D)
-	@$(call run_and_test,$(CXX) -c $(CPPFLAGS) $(CXXFLAGS) -include $(PCH_SRC) $< -o $@)
+	@$(call run_and_test, ($(CXX) -c $(CPPFLAGS) $(CXXFLAGS) -include $(PCH_SRC) $< -o $@))
 
 clean:
 	@echo "Cleaning"
