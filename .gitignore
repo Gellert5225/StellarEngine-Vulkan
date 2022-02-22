@@ -6,8 +6,8 @@ bin/
 build/
 lib/
 
-macOS/StellarEngine.app/Contents/Frameworks/
-macOS/StellarEngine.app/Contents/MacOS/
+macOS/StellarEngine.app/Contents/Frameworks/*
+macOS/StellarEngine.app/Contents/MacOS/*
 
 # precompiled headers
 *.gch

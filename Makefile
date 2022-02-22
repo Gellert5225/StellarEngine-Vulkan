@@ -17,7 +17,7 @@ ifeq ($(UNAME), Darwin)
 run_mac:
 	$(MAKE) -C Sandbox run_mac
 else
-	$(error ha)
+
 endif
 
 clean:
