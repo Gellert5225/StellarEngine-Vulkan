@@ -10,6 +10,7 @@ CFLAGS = -std=c++17 -Wall -g -O3
 INCLUDES = -I../Stellar/src/ -I../Stellar/vendor/spdlog/include -I../Stellar/vendor/glfw/include
 LFLAGS = -L./bin
 LIBS = -lStellar
+LD_LIB = LD_LIBRARY_PATH=./bin
 
 # Other
 BUILT_MSG = Sandbox has been built to bin
@@ -36,7 +37,7 @@ else
 	else 
 		ifeq ($(UNAME),Linux)
 			OS = linux
-			LIB_PATH = export LD_LIBRARY_PATH=./bin;
+			LIB_PATH = export LD_LIBRARY_PATH=./bin
 		else
 			$(error OS not supported by this Makefile)
 		endif
@@ -76,7 +77,7 @@ $(BUILD_DIR)/%.o: %.cpp
 	@$(call run_and_test, ($(CC) $(CFLAGS) $(INCLUDES) -c $<  -o $@))
 
 run:
-	$(EXPORT) $(LIB_PATH) \
+	$(LIB_PATH)
 	$(BIN_DIR)/Sandbox$(EXE_EXT)
 
 run_mac:

@@ -26,7 +26,7 @@ else
 		ifeq ($(UNAME),Linux)
 			OS = linux
 			LIB_EXT = .so
-			GLFW_LIB = libglfw.so.3.3
+			GLFW_LIB = libglfw.so.3
 		else
 			$(error OS not supported by this Makefile)
 		endif
