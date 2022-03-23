@@ -10,7 +10,8 @@ CFLAGS = -std=c++17 -Wall -g -O3
 INCLUDES = -I../Stellar/src/ -I../Stellar/vendor/spdlog/include -I../Stellar/vendor/glfw/include
 LFLAGS = -L./bin
 LIBS = -lStellar
-LD_LIB = LD_LIBRARY_PATH=./bin
+PWD = $(shell pwd)
+EXPORT_FLAG =
 
 # Other
 BUILT_MSG = Sandbox has been built to bin
@@ -29,7 +30,7 @@ else
 	ifeq ($(UNAME),Darwin)
 		BIN_DIR = ../macOS/StellarEngine.app/Contents/MacOS
 		OS = macos
-		LIB_PATH = export DYLD_LIBRARY_PATH=./bin;
+		EXPORT_FLAG = DYLD_LIBRARY_PATH
 
 		INSTALL_NAME_TOOL_STELLAR = $(shell install_name_tool -change lib/libStellar.dylib  "@executable_path/../Frameworks/libStellar.dylib" ../macOS/StellarEngine.app/Contents/MacOS/Sandbox)
         INSTALL_NAME_TOOL_GLFW = $(shell install_name_tool -add_rpath "@executable_path/../Frameworks" ../macOS/StellarEngine.app/Contents/MacOS/Sandbox)
@@ -37,7 +38,7 @@ else
 	else 
 		ifeq ($(UNAME),Linux)
 			OS = linux
-			LIB_PATH = export LD_LIBRARY_PATH=./bin
+			EXPORT_FLAG = LD_LIBRARY_PATH
 		else
 			$(error OS not supported by this Makefile)
 		endif
@@ -77,7 +78,7 @@ $(BUILD_DIR)/%.o: %.cpp
 	@$(call run_and_test, ($(CC) $(CFLAGS) $(INCLUDES) -c $<  -o $@))
 
 run:
-	$(LIB_PATH)
+	export $(EXPORT_FLAG)="${PWD}/bin"; \
 	$(BIN_DIR)/Sandbox$(EXE_EXT)
 
 run_mac:
