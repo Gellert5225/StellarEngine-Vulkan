@@ -1,27 +1,44 @@
 #include "stlrpch.h"
 #include "VulkanDevice.h"
+#include "Stellar/Log.h"
 
 namespace Stellar {
+    VulkanDevice* VulkanDevice::s_Instance = nullptr;
+
+    VulkanDevice* VulkanDevice::GetInstance() {
+        if (s_Instance == nullptr)
+            s_Instance = new VulkanDevice();
+        return s_Instance;
+    }
+
+    VulkanDevice::~VulkanDevice() {
+
+    }
+
+    void VulkanDevice::init() {
+        pickPhysicalDevice();
+    }
+
     void VulkanDevice::pickPhysicalDevice() {
         VkInstance* instance = VulkanInstance::GetInstance()->getVkInstance();
         uint32_t deviceCount = 0;
-        vkEnumeratePhysicalDevices(*instance,
-                                   &deviceCount, nullptr);
+        vkEnumeratePhysicalDevices(*instance, &deviceCount, nullptr);
         if (deviceCount == 0)
             throw std::runtime_error("Failed to find GPUs with Vulkan support");
 
         std::vector<VkPhysicalDevice> devices(deviceCount);
-        std::multimap<uint32_t, VkPhysicalDevice> candidates;
+        vkEnumeratePhysicalDevices(*instance, &deviceCount, devices.data());
 
-        for (const auto& device: devices) {
-            uint32_t score = rateDeviceSuitability(device);
-            candidates.insert(std::make_pair(score, device));
+        for (const auto& device : devices) {
+            if (isDeviceSuitable(device)) {
+                physicalDevice = device;
+                break;
+            }
         }
 
-        if (candidates.rbegin()->first > 0)
-            physicalDevice = candidates.rbegin()->second;
-        else
-            throw std::runtime_error("Failed to fild a suitable GPU");
+        if (physicalDevice == VK_NULL_HANDLE) {
+            throw std::runtime_error("failed to find a suitable GPU!");
+        }
     }
 
     bool VulkanDevice::isDeviceSuitable(VkPhysicalDevice device) {
@@ -29,8 +46,13 @@ namespace Stellar {
         VkPhysicalDeviceFeatures deviceFeatures;
         vkGetPhysicalDeviceProperties(device, &deviceProperties);
         vkGetPhysicalDeviceFeatures(device, &deviceFeatures);
+
+        STLR_CORE_INFO("GPU: {0}", deviceProperties.deviceName);
+
+        Queue::QueueFamilyIndices indices = findQueueFamilies(device);
+
         return deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU
-                && deviceFeatures.geometryShader;
+                && deviceFeatures.geometryShader && indices.isComplete();
     }
 
     uint32_t VulkanDevice::rateDeviceSuitability(VkPhysicalDevice device) {
@@ -49,5 +71,26 @@ namespace Stellar {
             return 0;
 
         return score;
+    }
+
+    Queue::QueueFamilyIndices VulkanDevice::findQueueFamilies(VkPhysicalDevice device) {
+        Queue::QueueFamilyIndices indices;
+
+        uint32_t queueFamilyCount = 0;
+        vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, nullptr);
+
+        std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
+        vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, queueFamilies.data());
+
+        int i = 0;
+        for (const auto& queueFamily : queueFamilies) {
+            if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT)
+                indices.graphicsFamily = i;
+            if (indices.isComplete())
+                break;
+            i++;
+        }
+
+        return indices;
     }
 }

@@ -37,6 +37,7 @@ namespace Stellar {
 
     void Application::run() {
         VulkanInstance::GetInstance()->init("Stellar Engine Sandbox", 1, "Stellar", 1);
+        VulkanDevice::GetInstance()->init();
 
         while (!glfwWindowShouldClose(m_Window->getGLFWWindow())) {
             for (Layer* layer : m_LayerStack)

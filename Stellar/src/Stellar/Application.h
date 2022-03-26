@@ -5,6 +5,7 @@
 #include "LayerStack.h"
 
 #include "Render/Vulkan/VulkanInstance.h"
+#include "Render/Vulkan/VulkanDevice.h"
 #include "Events/Event.h"
 #include "Events/ApplicationEvent.h"
 
@@ -27,10 +28,6 @@ namespace Stellar {
         std::unique_ptr<Window> m_Window;
         bool m_Running = true;
         LayerStack m_LayerStack;
-
-        // Vulkan
-        VkInstance instance = VK_NULL_HANDLE;
-        VkDebugUtilsMessengerEXT debugMessenger = VK_NULL_HANDLE;
     };
 
     Application* CreateApplication();
