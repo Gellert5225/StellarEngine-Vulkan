@@ -113,4 +113,8 @@ namespace Stellar {
     VkInstance *VulkanInstance::getVkInstance() {
         return &vkInstance;
     }
+
+    VulkanValidationLayer *VulkanInstance::getValidationLayerManager() const {
+        return validationLayerManager;
+    }
 }

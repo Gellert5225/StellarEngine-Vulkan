@@ -26,7 +26,7 @@ namespace Stellar {
         using EventCallbackFn = std::function<void(Event&)>;
 
         explicit Window(const WindowProperty&);
-        virtual ~Window();
+        ~Window();
 
         virtual void onUpdate();
         [[nodiscard]] virtual unsigned int getWidth() const;

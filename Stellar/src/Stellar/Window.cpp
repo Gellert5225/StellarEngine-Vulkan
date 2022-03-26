@@ -5,6 +5,7 @@
 #include "Stellar/Events/ApplicationEvent.h"
 #include "Stellar/Events/MouseEvent.h"
 #include "Stellar/Events/KeyEvent.h"
+#include "Stellar/Render/Vulkan/VulkanDevice.h"
 
 namespace Stellar {
     static void GLFWErrorCallback(int error, const char* description) {
@@ -147,6 +148,7 @@ namespace Stellar {
     }
 
     void Window::shutDown() {
+        delete VulkanDevice::GetInstance();
         glfwDestroyWindow(m_Window);
         glfwTerminate();
     }

@@ -27,6 +27,7 @@ namespace Stellar {
         static Application* s_Instance;
         std::unique_ptr<Window> m_Window;
         bool m_Running = true;
+        bool onWindowClose(WindowCloseEvent&);
         LayerStack m_LayerStack;
     };
 

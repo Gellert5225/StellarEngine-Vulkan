@@ -18,7 +18,8 @@ namespace Stellar {
     Application::~Application() = default;
 
     void Application::onEvent(Event& e) {
-        // EventDispatcher diapatcher(e);
+        EventDispatcher dispatcher(e);
+        dispatcher.dispatch<WindowCloseEvent>(BIND_EVENT_FN(Application::onWindowClose));
 
         for (auto it = m_LayerStack.end(); it != m_LayerStack.begin();) {
             (*--it)->onEvent(e);
@@ -38,13 +39,20 @@ namespace Stellar {
     void Application::run() {
         VulkanInstance::GetInstance()->init("Stellar Engine Sandbox", 1, "Stellar", 1);
         VulkanDevice::GetInstance()->init();
+        VulkanDevice::GetInstance()->createLogicalDevice();
 
-        while (!glfwWindowShouldClose(m_Window->getGLFWWindow())) {
+        while (m_Running) {
             for (Layer* layer : m_LayerStack)
                 layer->onUpdate();
             m_Window->onUpdate();
         }
 
+        m_Window = nullptr;
         delete VulkanInstance::GetInstance();
+    }
+
+    bool Application::onWindowClose(WindowCloseEvent& e) {
+        m_Running = false;
+        return true;
     }
 }
