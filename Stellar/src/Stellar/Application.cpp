@@ -38,7 +38,8 @@ namespace Stellar {
 
     void Application::run() {
         VulkanInstance::GetInstance()->init("Stellar Engine Sandbox", 1, "Stellar", 1);
-        VulkanDevice::GetInstance()->init();
+        VulkanSurface::GetInstance()->init(m_Window->getGLFWWindow());
+        VulkanDevice::GetInstance()->init(VulkanSurface::GetInstance()->getSurface());
         VulkanDevice::GetInstance()->createLogicalDevice();
 
         while (m_Running) {
@@ -48,6 +49,7 @@ namespace Stellar {
         }
 
         m_Window = nullptr;
+        delete VulkanSurface::GetInstance();
         delete VulkanInstance::GetInstance();
     }
 

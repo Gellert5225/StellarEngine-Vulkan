@@ -3,6 +3,10 @@
 #include "Stellar/Log.h"
 
 namespace Stellar {
+    const std::vector<const char*> validationLayers = {
+            "VK_LAYER_KHRONOS_validation"
+    };
+    
     VulkanDevice* VulkanDevice::s_Instance = nullptr;
 
     VulkanDevice* VulkanDevice::GetInstance() {
@@ -15,7 +19,8 @@ namespace Stellar {
         vkDestroyDevice(logicalDevice, nullptr);
     }
 
-    void VulkanDevice::init() {
+    void VulkanDevice::init(VkSurfaceKHR* surfaceRef) {
+        this->surface = surfaceRef;
         pickPhysicalDevice();
     }
 
@@ -44,26 +49,33 @@ namespace Stellar {
     void VulkanDevice::createLogicalDevice() {
         Queue::QueueFamilyIndices indices = findQueueFamilies(physicalDevice);
 
-        VkDeviceQueueCreateInfo queueCreateInfo{};
-        queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
-        queueCreateInfo.queueFamilyIndex = indices.graphicsFamily.value();
-        queueCreateInfo.queueCount = 1;
+        std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
+        std::set<uint32_t> uniqueQueueFamilies = {
+                indices.graphicsFamily.value(),
+                indices.presentFamily.value()
+        };
 
         float queuePriority = 1.0f;
-        queueCreateInfo.pQueuePriorities = &queuePriority;
+        for (uint32_t queueFamily : uniqueQueueFamilies) {
+            VkDeviceQueueCreateInfo queueCreateInfo{};
+            queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+            queueCreateInfo.queueFamilyIndex = queueFamily;
+            queueCreateInfo.queueCount = 1;
+            queueCreateInfo.pQueuePriorities = &queuePriority;
+            queueCreateInfos.push_back(queueCreateInfo);
+        }
 
         VkPhysicalDeviceFeatures deviceFeatures{};
         VkDeviceCreateInfo createInfo{};
         createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
-        createInfo.pQueueCreateInfos = &queueCreateInfo;
-        createInfo.queueCreateInfoCount = 1;
+        createInfo.pQueueCreateInfos = queueCreateInfos.data();
+        createInfo.queueCreateInfoCount = static_cast<uint32_t>(queueCreateInfos.size());
         createInfo.pEnabledFeatures = &deviceFeatures;
 
         createInfo.enabledExtensionCount = 0;
 
         VulkanValidationLayer* validationLayer = VulkanInstance::GetInstance()->getValidationLayerManager();
         if (validationLayer && VulkanValidationLayer::ValidationLayerEnabled()) {
-            const std::vector<const char*> validationLayers = VulkanValidationLayer::GetValidationLayers();
             createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
             createInfo.ppEnabledLayerNames = validationLayers.data();
         } else {
@@ -74,6 +86,7 @@ namespace Stellar {
             throw std::runtime_error("failed to create logical device!");
         }
 
+        vkGetDeviceQueue(logicalDevice, indices.presentFamily.value(), 0, &presentQueue);
         vkGetDeviceQueue(logicalDevice, indices.graphicsFamily.value(), 0, &graphicsQueue);
     }
 
@@ -122,6 +135,12 @@ namespace Stellar {
         for (const auto &queueFamily: queueFamilies) {
             if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT)
                 indices.graphicsFamily = i;
+
+            VkBool32 presentSupport = false;
+            vkGetPhysicalDeviceSurfaceSupportKHR(device, i, *surface, &presentSupport);
+
+            if (presentSupport)
+                indices.presentFamily = i;
             if (indices.isComplete())
                 break;
             i++;

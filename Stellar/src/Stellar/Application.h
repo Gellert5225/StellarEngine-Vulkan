@@ -6,6 +6,7 @@
 
 #include "Render/Vulkan/VulkanInstance.h"
 #include "Render/Vulkan/VulkanDevice.h"
+#include "Render/Vulkan/VulkanSurface.h"
 #include "Events/Event.h"
 #include "Events/ApplicationEvent.h"
 

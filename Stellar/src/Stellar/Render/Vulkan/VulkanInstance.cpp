@@ -3,6 +3,11 @@
 
 #include "Stellar/Log.h"
 
+
+const std::vector<const char*> validationLayers = {
+        "VK_LAYER_KHRONOS_validation"
+};
+
 namespace Stellar {
     VulkanInstance* VulkanInstance::s_Instance = nullptr;
 

@@ -94,7 +94,7 @@ namespace Stellar {
     }
 
     std::vector<const char *>& VulkanValidationLayer::GetValidationLayers() {
-        return *(new std::vector<const char*>{"VK_LAYER_KHRONOS_validation"});
+        return *(new std::vector<const char*>{"VK_LAYER_KHRONOS_validation\0"});
     }
 
     VkBool32 VulkanValidationLayer::DebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,

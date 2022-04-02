@@ -15,17 +15,20 @@ namespace Stellar {
         VkDevice logicalDevice = VK_NULL_HANDLE;
 
         VkQueue graphicsQueue = VK_NULL_HANDLE;
+        VkQueue presentQueue = VK_NULL_HANDLE;
+
+        VkSurfaceKHR* surface;
 
         VulkanDevice() = default;
-        static bool isDeviceSuitable(VkPhysicalDevice device);
+        bool isDeviceSuitable(VkPhysicalDevice device);
         static uint32_t rateDeviceSuitability(VkPhysicalDevice device);
     public:
         static VulkanDevice* GetInstance();
 
-        void init();
+        void init(VkSurfaceKHR*);
         void pickPhysicalDevice();
         void createLogicalDevice();
-        static Queue::QueueFamilyIndices findQueueFamilies(VkPhysicalDevice);
+        Queue::QueueFamilyIndices findQueueFamilies(VkPhysicalDevice);
         ~VulkanDevice();
     };
 }
