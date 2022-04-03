@@ -18,7 +18,9 @@ namespace Stellar {
         VkQueue graphicsQueue = VK_NULL_HANDLE;
         VkQueue presentQueue = VK_NULL_HANDLE;
 
-        VkSurfaceKHR* surface;
+        VkSurfaceKHR* surface = VK_NULL_HANDLE;
+
+        Queue::QueueFamilyIndices m_Indices;
 
         VulkanDevice() = default;
         bool isDeviceSuitable(VkPhysicalDevice device) const;
@@ -29,6 +31,12 @@ namespace Stellar {
         void init(VkSurfaceKHR*);
         void pickPhysicalDevice();
         void createLogicalDevice();
+
+        [[nodiscard]] Queue::QueueFamilyIndices getIndices() const;
+
+        VkPhysicalDevice* getPhysicalDevice();
+        VkDevice* getLogicalDevice();
+
         Queue::QueueFamilyIndices findQueueFamilies(VkPhysicalDevice) const;
         SwapChain::SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device) const;
         ~VulkanDevice();

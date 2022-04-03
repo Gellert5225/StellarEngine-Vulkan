@@ -12,5 +12,21 @@ namespace Stellar {
             std::vector<VkSurfaceFormatKHR> formats;
             std::vector<VkPresentModeKHR> presentModes;
         };
+
+    public:
+        SwapChain();
+        ~SwapChain();
+
+        [[nodiscard]] static VkSurfaceFormatKHR chooseSwapSurfaceFormat(
+                const std::vector<VkSurfaceFormatKHR>&);
+        [[nodiscard]] static VkPresentModeKHR chooseSwapPresentMode(
+                const std::vector<VkPresentModeKHR>&);
+        [[nodiscard]] static VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR&);
+
+    private:
+        VkSwapchainKHR vkSwapChain = VK_NULL_HANDLE;
+        std::vector<VkImage> swapChainImages;
+        VkFormat swapChainImageFormat;
+        VkExtent2D swapChainExtent;
     };
 }

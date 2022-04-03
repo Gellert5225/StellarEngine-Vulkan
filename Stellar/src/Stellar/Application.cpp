@@ -41,6 +41,7 @@ namespace Stellar {
         VulkanSurface::GetInstance()->init(m_Window->getGLFWWindow());
         VulkanDevice::GetInstance()->init(VulkanSurface::GetInstance()->getSurface());
         VulkanDevice::GetInstance()->createLogicalDevice();
+        SwapChain* swapChain = new SwapChain();
 
         while (m_Running) {
             for (Layer* layer : m_LayerStack)
@@ -49,6 +50,8 @@ namespace Stellar {
         }
 
         m_Window = nullptr;
+        delete swapChain;
+        delete VulkanDevice::GetInstance();
         delete VulkanSurface::GetInstance();
         delete VulkanInstance::GetInstance();
     }

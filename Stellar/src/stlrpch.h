@@ -7,6 +7,8 @@
 #include <algorithm>
 #include <functional>
 #include <stdexcept>
+#include <cstdint>
+#include <limits>
 
 #include <cstring>
 #include <string>

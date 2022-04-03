@@ -45,12 +45,12 @@ namespace Stellar {
     }
 
     void VulkanDevice::createLogicalDevice() {
-        Queue::QueueFamilyIndices indices = findQueueFamilies(physicalDevice);
+        m_Indices = findQueueFamilies(physicalDevice);
 
         std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
         std::set<uint32_t> uniqueQueueFamilies = {
-                indices.graphicsFamily.value(),
-                indices.presentFamily.value()
+                m_Indices.graphicsFamily.value(),
+                m_Indices.presentFamily.value()
         };
 
         float queuePriority = 1.0f;
@@ -84,8 +84,8 @@ namespace Stellar {
             throw std::runtime_error("failed to create logical device!");
         }
 
-        vkGetDeviceQueue(logicalDevice, indices.presentFamily.value(), 0, &presentQueue);
-        vkGetDeviceQueue(logicalDevice, indices.graphicsFamily.value(), 0, &graphicsQueue);
+        vkGetDeviceQueue(logicalDevice, m_Indices.presentFamily.value(), 0, &presentQueue);
+        vkGetDeviceQueue(logicalDevice, m_Indices.graphicsFamily.value(), 0, &graphicsQueue);
     }
 
     bool VulkanDevice::isDeviceSuitable(VkPhysicalDevice device) const {
@@ -178,5 +178,17 @@ namespace Stellar {
         }
 
         return details;
+    }
+
+    VkPhysicalDevice* VulkanDevice::getPhysicalDevice() {
+        return &physicalDevice;
+    }
+
+    Queue::QueueFamilyIndices VulkanDevice::getIndices() const {
+        return m_Indices;
+    }
+
+    VkDevice *VulkanDevice::getLogicalDevice() {
+        return &logicalDevice;
     }
 }
