@@ -1,6 +1,7 @@
 #include "stlrpch.h"
 #include "VulkanValidationLayer.h"
 
+#include "VulkanCommon.h"
 #include "VulkanInstance.h"
 #include "Stellar/Log.h"
 
@@ -74,10 +75,10 @@ namespace Stellar {
         std::vector<VkLayerProperties> availableLayers(layerCount);
         vkEnumerateInstanceLayerProperties(&layerCount, availableLayers.data());
 
-        for (const char* layerName : GetValidationLayers()) {
+        for (const char *layerName: validationLayers) {
             bool layerFound = false;
 
-            for (const auto& layerProperties : availableLayers) {
+            for (const auto &layerProperties: availableLayers) {
                 if (strcmp(layerName, layerProperties.layerName) == 0) {
                     layerFound = true;
                     break;
@@ -91,10 +92,6 @@ namespace Stellar {
         }
 
         return true;
-    }
-
-    std::vector<const char *>& VulkanValidationLayer::GetValidationLayers() {
-        return *(new std::vector<const char*>{"VK_LAYER_KHRONOS_validation\0"});
     }
 
     VkBool32 VulkanValidationLayer::DebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,

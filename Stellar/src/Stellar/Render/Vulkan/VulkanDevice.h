@@ -2,6 +2,7 @@
 
 #include "Stellar/Core.h"
 #include "VulkanInstance.h"
+#include "SwapChain.h"
 #include "Queue.h"
 
 #include <GLFW/glfw3.h>
@@ -20,15 +21,16 @@ namespace Stellar {
         VkSurfaceKHR* surface;
 
         VulkanDevice() = default;
-        bool isDeviceSuitable(VkPhysicalDevice device);
-        static uint32_t rateDeviceSuitability(VkPhysicalDevice device);
+        bool isDeviceSuitable(VkPhysicalDevice device) const;
+        bool checkDeviceExtensionSupport(VkPhysicalDevice device) const;
     public:
         static VulkanDevice* GetInstance();
 
         void init(VkSurfaceKHR*);
         void pickPhysicalDevice();
         void createLogicalDevice();
-        Queue::QueueFamilyIndices findQueueFamilies(VkPhysicalDevice);
+        Queue::QueueFamilyIndices findQueueFamilies(VkPhysicalDevice) const;
+        SwapChain::SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device) const;
         ~VulkanDevice();
     };
 }

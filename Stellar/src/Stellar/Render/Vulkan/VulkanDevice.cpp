@@ -1,12 +1,10 @@
 #include "stlrpch.h"
 #include "VulkanDevice.h"
+#include "VulkanCommon.h"
 #include "Stellar/Log.h"
 
 namespace Stellar {
-    const std::vector<const char*> validationLayers = {
-            "VK_LAYER_KHRONOS_validation"
-    };
-    
+
     VulkanDevice* VulkanDevice::s_Instance = nullptr;
 
     VulkanDevice* VulkanDevice::GetInstance() {
@@ -71,8 +69,8 @@ namespace Stellar {
         createInfo.pQueueCreateInfos = queueCreateInfos.data();
         createInfo.queueCreateInfoCount = static_cast<uint32_t>(queueCreateInfos.size());
         createInfo.pEnabledFeatures = &deviceFeatures;
-
-        createInfo.enabledExtensionCount = 0;
+        createInfo.enabledExtensionCount = static_cast<uint32_t>(deviceExtensions.size());
+        createInfo.ppEnabledExtensionNames = deviceExtensions.data();
 
         VulkanValidationLayer* validationLayer = VulkanInstance::GetInstance()->getValidationLayerManager();
         if (validationLayer && VulkanValidationLayer::ValidationLayerEnabled()) {
@@ -90,7 +88,7 @@ namespace Stellar {
         vkGetDeviceQueue(logicalDevice, indices.graphicsFamily.value(), 0, &graphicsQueue);
     }
 
-    bool VulkanDevice::isDeviceSuitable(VkPhysicalDevice device) {
+    bool VulkanDevice::isDeviceSuitable(VkPhysicalDevice device) const {
         VkPhysicalDeviceProperties deviceProperties;
         VkPhysicalDeviceFeatures deviceFeatures;
         vkGetPhysicalDeviceProperties(device, &deviceProperties);
@@ -100,29 +98,38 @@ namespace Stellar {
 
         Queue::QueueFamilyIndices indices = findQueueFamilies(device);
 
+        bool extensionSupported = checkDeviceExtensionSupport(device);
+        bool swapChainAdequate = false;
+
+        if (extensionSupported) {
+            SwapChain::SwapChainSupportDetails support = querySwapChainSupport(device);
+            swapChainAdequate = !support.formats.empty() && !support.presentModes.empty();
+        }
+
         return deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU
-                && deviceFeatures.geometryShader && indices.isComplete();
+                && deviceFeatures.geometryShader
+                && indices.isComplete()
+                && extensionSupported
+                && swapChainAdequate;
     }
 
-    uint32_t VulkanDevice::rateDeviceSuitability(VkPhysicalDevice device) {
-        VkPhysicalDeviceProperties deviceProperties;
-        VkPhysicalDeviceFeatures deviceFeatures;
-        vkGetPhysicalDeviceProperties(device, &deviceProperties);
-        vkGetPhysicalDeviceFeatures(device, &deviceFeatures);
-        uint32_t score = 0;
+    bool VulkanDevice::checkDeviceExtensionSupport(VkPhysicalDevice device) const {
+        uint32_t extensionCount;
+        vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, nullptr);
 
-        if (deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU)
-            score += 1000;
+        std::vector<VkExtensionProperties> availableExtensions(extensionCount);
+        vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, availableExtensions.data());
 
-        score += deviceProperties.limits.maxImageDimension2D;
+        std::set<std::string> requiredExtensions(deviceExtensions.begin(), deviceExtensions.end());
 
-        if (!deviceFeatures.geometryShader)
-            return 0;
+        for (const auto& extension : availableExtensions) {
+            requiredExtensions.erase(extension.extensionName);
+        }
 
-        return score;
+        return requiredExtensions.empty();
     }
 
-    Queue::QueueFamilyIndices VulkanDevice::findQueueFamilies(VkPhysicalDevice device) {
+    Queue::QueueFamilyIndices VulkanDevice::findQueueFamilies(VkPhysicalDevice device) const {
         Queue::QueueFamilyIndices indices;
 
         uint32_t queueFamilyCount = 0;
@@ -147,5 +154,29 @@ namespace Stellar {
         }
 
         return indices;
+    }
+
+    SwapChain::SwapChainSupportDetails VulkanDevice::querySwapChainSupport(VkPhysicalDevice device) const {
+        SwapChain::SwapChainSupportDetails details;
+
+        vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, *surface, &details.capabilities);
+
+        uint32_t formatCount;
+        vkGetPhysicalDeviceSurfaceFormatsKHR(device, *surface, &formatCount, nullptr);
+
+        if (formatCount != 0) {
+            details.formats.resize(formatCount);
+            vkGetPhysicalDeviceSurfaceFormatsKHR(device, *surface, &formatCount, details.formats.data());
+        }
+
+        uint32_t presentModeCount;
+        vkGetPhysicalDeviceSurfacePresentModesKHR(device, *surface, &presentModeCount, nullptr);
+
+        if (presentModeCount != 0) {
+            details.presentModes.resize(presentModeCount);
+            vkGetPhysicalDeviceSurfacePresentModesKHR(device, *surface, &presentModeCount, details.presentModes.data());
+        }
+
+        return details;
     }
 }

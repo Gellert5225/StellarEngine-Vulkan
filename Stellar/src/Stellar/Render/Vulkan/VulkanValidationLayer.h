@@ -13,7 +13,6 @@ namespace Stellar {
         void setupDebugMessenger();
         [[nodiscard]] static bool ValidationLayerEnabled();
         [[nodiscard]] static bool CheckValidationLayerSupport();
-        static std::vector<const char*>& GetValidationLayers();
         static void PopulateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT&);
     private:
         VkDebugUtilsMessengerEXT debugMessenger = VK_NULL_HANDLE;

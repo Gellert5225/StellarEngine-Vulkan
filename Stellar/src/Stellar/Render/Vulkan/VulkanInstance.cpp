@@ -1,12 +1,8 @@
 #include "stlrpch.h"
 #include "VulkanInstance.h"
 
+#include "VulkanCommon.h"
 #include "Stellar/Log.h"
-
-
-const std::vector<const char*> validationLayers = {
-        "VK_LAYER_KHRONOS_validation"
-};
 
 namespace Stellar {
     VulkanInstance* VulkanInstance::s_Instance = nullptr;
@@ -68,8 +64,8 @@ namespace Stellar {
 
         VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo{};
 #ifndef NDEBUG
-        createInfo.enabledLayerCount = static_cast<uint32_t>(VulkanValidationLayer::GetValidationLayers().size());
-        createInfo.ppEnabledLayerNames = VulkanValidationLayer::GetValidationLayers().data();
+        createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
+        createInfo.ppEnabledLayerNames = validationLayers.data();
         VulkanValidationLayer::PopulateDebugMessengerCreateInfo(debugCreateInfo);
         createInfo.pNext = (VkDebugUtilsMessengerCreateInfoEXT*) &debugCreateInfo;
 #else
