@@ -42,6 +42,7 @@ namespace Stellar {
         VulkanDevice::GetInstance()->init(VulkanSurface::GetInstance()->getSurface());
         VulkanDevice::GetInstance()->createLogicalDevice();
         SwapChain* swapChain = new SwapChain();
+        VulkanImageView* imageView = new VulkanImageView(swapChain);
 
         while (m_Running) {
             for (Layer* layer : m_LayerStack)
@@ -49,11 +50,12 @@ namespace Stellar {
             m_Window->onUpdate();
         }
 
-        m_Window = nullptr;
+        delete imageView;
         delete swapChain;
         delete VulkanDevice::GetInstance();
         delete VulkanSurface::GetInstance();
         delete VulkanInstance::GetInstance();
+        m_Window = nullptr;
     }
 
     bool Application::onWindowClose(WindowCloseEvent& e) {

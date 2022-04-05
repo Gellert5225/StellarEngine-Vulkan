@@ -148,7 +148,6 @@ namespace Stellar {
     }
 
     void Window::shutDown() {
-        delete VulkanDevice::GetInstance();
         glfwDestroyWindow(m_Window);
         glfwTerminate();
     }

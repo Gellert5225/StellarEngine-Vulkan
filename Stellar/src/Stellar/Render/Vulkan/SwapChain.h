@@ -17,6 +17,10 @@ namespace Stellar {
         SwapChain();
         ~SwapChain();
 
+        [[nodiscard]] const std::vector<VkImage>* getSwapChainImages() const;
+        [[nodiscard]] VkFormat getSwapChainImageFormat() const;
+
+
         [[nodiscard]] static VkSurfaceFormatKHR chooseSwapSurfaceFormat(
                 const std::vector<VkSurfaceFormatKHR>&);
         [[nodiscard]] static VkPresentModeKHR chooseSwapPresentMode(

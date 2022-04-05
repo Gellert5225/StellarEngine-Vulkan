@@ -8,6 +8,7 @@
 #include "Render/Vulkan/VulkanDevice.h"
 #include "Render/Vulkan/VulkanSurface.h"
 #include "Render/Vulkan/SwapChain.h"
+#include "Render/Vulkan/VulkanImageView.h"
 #include "Events/Event.h"
 #include "Events/ApplicationEvent.h"
 

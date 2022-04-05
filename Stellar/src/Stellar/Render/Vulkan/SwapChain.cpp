@@ -112,4 +112,12 @@ namespace Stellar {
         vkDestroySwapchainKHR(*VulkanDevice::GetInstance()->getLogicalDevice(),
                               vkSwapChain, nullptr);
     }
+
+    const std::vector<VkImage>* SwapChain::getSwapChainImages() const {
+        return &swapChainImages;
+    }
+
+    VkFormat SwapChain::getSwapChainImageFormat() const {
+        return swapChainImageFormat;
+    }
 }
