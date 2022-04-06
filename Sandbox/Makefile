@@ -1,5 +1,4 @@
 # Directory setup
-SRC_DIR = src
 BUILD_DIR = build
 BIN_DIR = bin
 RM = rm -f
@@ -12,6 +11,7 @@ LFLAGS = -L./bin
 LIBS = -lStellar
 PWD = $(shell pwd)
 EXPORT_FLAG =
+SHADER_FLAG = glslc
 
 # Other
 BUILT_MSG = Sandbox has been built to bin
@@ -47,8 +47,15 @@ endif
 
 # Source files
 SRC_DIR = src
+SHADER_DIR = resource/Shader
 SRCS := $(sort $(shell find $(SRC_DIR) -name '*.cpp'))
 OBJS = $(SRCS:%.cpp=$(BUILD_DIR)/%.o)
+VERT_SRCS := $(sort $(shell find $(SHADER_DIR) -name '*.vert'))
+FRAG_SRCS := $(sort $(shell find $(SHADER_DIR) -name '*.frag'))
+VERT_SPIRV = $(VERT_SRCS:%.vert=$(SHADER_DIR)/%.spv)
+FRAG_SPIRV = $(FRAG_SRCS:%.frag=$(SHADER_DIR)/%.spv)
+
+COMPILE_SHADERS = $(shell chmod +x resource/Shader/compile.sh && ./resource/Shader/compile.sh)
 
 ifeq ($(OS),linux)
 	LIBS += -lglfw -lvulkan
@@ -67,6 +74,8 @@ all: $(BIN_DIR)/$(MAIN)
 	$(CP_LIBS)
 	$(INSTALL_NAME_TOOL_STELLAR)
 	$(INSTALL_NAME_TOOL_GLFW)
+	@echo Compiling shaders
+	$(COMPILE_SHADERS)
 	@echo Sandbox has been built to bin
 
 $(BIN_DIR)/$(MAIN): $(OBJS) 
