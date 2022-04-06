@@ -8,6 +8,6 @@
 namespace Stellar {
     class STLR_API GraphicsPipeline : public Pipeline {
     public:
-        GraphicsPipeline(const std::string&, const std::string&);
+        GraphicsPipeline(const std::string&, const std::string&, const VkExtent2D&);
     };
 }

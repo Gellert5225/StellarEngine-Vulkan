@@ -9,7 +9,7 @@ LDLIBS   =
 RM       = rm -f
 PCH_SRC  = ./src/stlrpch.h
 PCH_OUT  = ./src/stlrpch.h.gch
-PCH_FLAGS = -x c++-header -std=c++17 -g -O3 -DSTLR_BUILD_DLL -DNDEBUG -fPIC
+PCH_FLAGS = -x c++-header -std=c++17 -g -O3 -DSTLR_BUILD_DLL -fPIC
 
 # Target OS detection
 ifeq ($(OS),Windows_NT) # OS is a preexisting environment variable on Windows

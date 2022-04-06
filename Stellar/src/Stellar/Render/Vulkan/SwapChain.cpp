@@ -120,4 +120,8 @@ namespace Stellar {
     VkFormat SwapChain::getSwapChainImageFormat() const {
         return swapChainImageFormat;
     }
+
+    VkExtent2D SwapChain::getSwapChainExtent() const {
+        return swapChainExtent;
+    }
 }
