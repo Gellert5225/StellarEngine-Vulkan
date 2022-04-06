@@ -1,11 +1,13 @@
-//
-// Created by gellert on 4/5/22.
-//
-
 #pragma once
 
+#include "Stellar/Core.h"
 
-class GraphicsPipeline {
+#include "Pipeline.h"
+#include "../Shader/Shader.h"
 
-};
-
+namespace Stellar {
+    class STLR_API GraphicsPipeline : public Pipeline {
+    public:
+        GraphicsPipeline(const std::string&, const std::string&);
+    };
+}

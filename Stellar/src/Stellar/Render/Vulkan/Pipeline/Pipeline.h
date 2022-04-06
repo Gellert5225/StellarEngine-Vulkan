@@ -1,11 +1,20 @@
-//
-// Created by gellert on 4/5/22.
-//
-
 #pragma once
 
+#include "Stellar/Core.h"
 
-class Pipeline {
+#include <GLFW/glfw3.h>
 
-};
+namespace Stellar {
+    class STLR_API Pipeline {
+    public:
+        Pipeline() = default;
+        virtual ~Pipeline() = 0;
 
+        VkPipeline* getPipeline();
+        VkPipelineLayout* getPipelineLayout();
+
+    protected:
+        VkPipelineLayout pipelineLayout;
+        VkPipeline pipeline;
+    };
+}

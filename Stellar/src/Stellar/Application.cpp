@@ -3,6 +3,9 @@
 
 #include "Log.h"
 
+#include <filesystem>
+#include <unistd.h>
+
 namespace Stellar {
     #define BIND_EVENT_FN(X) std::bind(&X, this, std::placeholders::_1)
 
@@ -43,6 +46,9 @@ namespace Stellar {
         VulkanDevice::GetInstance()->createLogicalDevice();
         SwapChain* swapChain = new SwapChain();
         VulkanImageView* imageView = new VulkanImageView(swapChain);
+        GraphicsPipeline* pipeline = new GraphicsPipeline("resource/Shader/shaderVert.spv",
+                                                          "resource/Shader/shaderFrag.spv");
+
 
         while (m_Running) {
             for (Layer* layer : m_LayerStack)
