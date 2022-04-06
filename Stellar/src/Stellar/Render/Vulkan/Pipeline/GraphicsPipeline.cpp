@@ -2,6 +2,7 @@
 #include "GraphicsPipeline.h"
 
 #include "../VulkanDevice.h"
+#include "../RenderPass/StandardRenderPass.h"
 
 namespace Stellar {
 
@@ -119,6 +120,30 @@ namespace Stellar {
         if (vkCreatePipelineLayout(*VulkanDevice::GetInstance()->getLogicalDevice(),
                                    &pipelineLayoutInfo, nullptr, &pipelineLayout) != VK_SUCCESS) {
             throw std::runtime_error("failed to create pipeline layout!");
+        }
+
+        VkGraphicsPipelineCreateInfo pipelineInfo{};
+        pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
+        pipelineInfo.stageCount = 2;
+        pipelineInfo.pStages = shaderStages;
+        pipelineInfo.pVertexInputState = &vertexInputInfo;
+        pipelineInfo.pInputAssemblyState = &inputAssembly;
+        pipelineInfo.pViewportState = &viewportState;
+        pipelineInfo.pRasterizationState = &rasterizer;
+        pipelineInfo.pMultisampleState = &multisampling;
+        pipelineInfo.pDepthStencilState = nullptr; // Optional
+        pipelineInfo.pColorBlendState = &colorBlending;
+        pipelineInfo.pDynamicState = nullptr; // Optional
+        pipelineInfo.layout = pipelineLayout;
+        pipelineInfo.renderPass = *StandardRenderPass::GetInstance()->getVkRenderPass();
+        pipelineInfo.subpass = 0;
+        pipelineInfo.basePipelineHandle = VK_NULL_HANDLE; // Optional
+        pipelineInfo.basePipelineIndex = -1; // Optional
+
+        if (vkCreateGraphicsPipelines(*VulkanDevice::GetInstance()->getLogicalDevice(),
+                                      VK_NULL_HANDLE, 1, &pipelineInfo, nullptr,
+                                      &pipeline) != VK_SUCCESS) {
+            throw std::runtime_error("failed to create graphics pipeline!");
         }
 
         vkDestroyShaderModule(*VulkanDevice::GetInstance()->getLogicalDevice(),

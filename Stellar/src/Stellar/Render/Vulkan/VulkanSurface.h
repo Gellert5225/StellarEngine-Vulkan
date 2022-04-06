@@ -3,7 +3,7 @@
 #include "Stellar/Core.h"
 #include "Stellar/Window.h"
 
-#include <GLFW/glfw3.h>
+#include <vulkan/vulkan.h>
 
 namespace Stellar {
     class STLR_API VulkanSurface {

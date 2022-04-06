@@ -1,7 +1,7 @@
 #pragma once
 #include "stlrpch.h"
 
-#include <GLFW/glfw3.h>
+#include <vulkan/vulkan.h>
 
 const std::vector<const char*> validationLayers = {
         "VK_LAYER_KHRONOS_validation"

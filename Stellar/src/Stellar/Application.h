@@ -10,6 +10,7 @@
 #include "Render/Vulkan/SwapChain.h"
 #include "Render/Vulkan/VulkanImageView.h"
 #include "Render/Vulkan/Pipeline/GraphicsPipeline.h"
+#include "Render/Vulkan/RenderPass/StandardRenderPass.h"
 #include "Events/Event.h"
 #include "Events/ApplicationEvent.h"
 

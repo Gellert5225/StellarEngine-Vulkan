@@ -43,10 +43,10 @@ namespace Stellar {
         VulkanDevice::GetInstance()->createLogicalDevice();
         SwapChain* swapChain = new SwapChain();
         VulkanImageView* imageView = new VulkanImageView(swapChain);
+        StandardRenderPass::GetInstance()->init(swapChain->getSwapChainImageFormat());
         GraphicsPipeline* pipeline = new GraphicsPipeline("resource/Shader/shaderVert.spv",
                                                           "resource/Shader/shaderFrag.spv",
                                                           swapChain->getSwapChainExtent());
-
 
         while (m_Running) {
             for (Layer* layer : m_LayerStack)
@@ -57,6 +57,7 @@ namespace Stellar {
         delete imageView;
         delete swapChain;
         delete pipeline;
+        delete StandardRenderPass::GetInstance();
         delete VulkanDevice::GetInstance();
         delete VulkanSurface::GetInstance();
         delete VulkanInstance::GetInstance();
